@@ -34,7 +34,6 @@
   --radius-sm:10px;
   --max:1160px;
   --topbar-h:64px;
-  --ticker-h:38px;
 }
 *{box-sizing:border-box; margin:0; padding:0;}
 html{scroll-behavior:smooth;}
@@ -64,7 +63,7 @@ img{max-width:100%; display:block;}
 h1,h2,h3,h4{font-family:'Space Grotesk', sans-serif; font-weight:600; letter-spacing:-0.01em; color:var(--ink);}
 section{padding:96px 0;}
 section + section{border-top:1px solid var(--line);}
-@media (max-width:700px){section{padding:64px 0;} :root{--ticker-h:34px;}}
+@media (max-width:700px){section{padding:64px 0;}}
 
 .reveal{opacity:0; transform:translateY(16px); transition:opacity 0.6s cubic-bezier(.2,.7,.3,1), transform 0.6s cubic-bezier(.2,.7,.3,1);}
 .reveal.in{opacity:1; transform:translateY(0);}
@@ -85,7 +84,7 @@ section + section{border-top:1px solid var(--line);}
 
 /* SCROLL PROGRESS */
 
-/* TOP BAR: nav + ticker fixed together */
+/* TOP BAR: fixed nav */
 .topbar{position:fixed; top:0; left:0; right:0; z-index:200;}
 nav{
   height:var(--topbar-h); display:flex; align-items:center;
@@ -130,18 +129,6 @@ nav .wrap{width:100%; display:flex; align-items:center; justify-content:space-be
 .nav-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:55; opacity:0; pointer-events:none; transition:opacity 0.3s;}
 .nav-overlay.open{opacity:1; pointer-events:auto;}
 
-/* TICKER — subtle, one-time decorative strip (not pinned) */
-.ticker-strip{
-  height:30px; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-  overflow:hidden; display:flex; align-items:center; opacity:0.6;
-  mask-image:linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
-}
-.ticker-track{display:flex; gap:34px; white-space:nowrap; animation:ticker-scroll 52s linear infinite; padding-left:34px;}
-@keyframes ticker-scroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
-@media (prefers-reduced-motion: reduce){.ticker-track{animation:none;}}
-.ticker-item{font-family:'JetBrains Mono', monospace; font-size:0.68rem; letter-spacing:0.05em; color:var(--ink-faint); display:flex; align-items:center; gap:34px; text-transform:uppercase;}
-.ticker-item .sep{color:var(--steel); opacity:0.5;}
-
 /* HERO */
 .hero{padding:76px 0 64px; position:relative;}
 .hero-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:center;}
@@ -176,17 +163,33 @@ nav .wrap{width:100%; display:flex; align-items:center; justify-content:space-be
   position:absolute; bottom:-13px; left:50%; transform:translateX(-50%);
   background:var(--surface-2); border:1px solid var(--line); border-radius:20px;
   padding:6px 13px 6px 9px; display:flex; align-items:center; gap:7px;
-  font-family:'JetBrains Mono', monospace; font-size:0.68rem; color:var(--ok); white-space:nowrap;
+  font-family:'JetBrains Mono', monospace; font-size:0.68rem; color:var(--ink-dim); white-space:nowrap;
 }
-.portrait-badge .dot{width:6px; height:6px; border-radius:50%; background:var(--ok); animation:pulse 2.2s infinite;}
-@media (prefers-reduced-motion: reduce){.portrait-badge .dot{animation:none;}}
+.portrait-badge .dot{width:6px; height:6px; border-radius:50%; background:var(--blue);}
 
-.stack-pipeline{width:100%; max-width:270px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; margin-top:8px;}
-.stack-pipeline .sp-label{font-family:'JetBrains Mono', monospace; font-size:0.66rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:14px;}
-.sp-row{display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono', monospace; font-size:0.79rem; color:var(--ink); padding:7px 0; position:relative;}
-.sp-row .sp-dot{width:7px; height:7px; border-radius:50%; background:var(--blue); flex-shrink:0;}
-.sp-row:last-child .sp-dot{background:var(--amber);}
-.sp-row:not(:last-child)::after{content:''; position:absolute; left:3.5px; top:22px; width:1px; height:16px; background:var(--line);}
+.system-viz{width:100%; max-width:280px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px 22px; margin-top:8px;}
+.sv-label{font-size:0.66rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px;}
+.sv-track{position:relative; padding-left:18px;}
+.sv-track::before{content:''; position:absolute; left:3px; top:8px; bottom:8px; width:1px; background:var(--line);}
+.sv-pulse{
+  position:absolute; left:0px; top:8px; width:7px; height:7px; margin-left:-3px; border-radius:50%;
+  background:var(--blue); box-shadow:0 0 8px 1px rgba(61,139,253,0.7);
+  animation:sv-travel 5.5s cubic-bezier(.4,0,.2,1) infinite;
+}
+@keyframes sv-travel{
+  0%{top:8px; opacity:0; background:var(--blue); box-shadow:0 0 8px 1px rgba(61,139,253,0.7);}
+  8%{opacity:1;}
+  46%{opacity:1; background:var(--blue); box-shadow:0 0 8px 1px rgba(61,139,253,0.7);}
+  50%{background:var(--amber); box-shadow:0 0 8px 1px rgba(227,161,58,0.7);}
+  92%{opacity:1;}
+  100%{top:calc(100% - 8px); opacity:0; background:var(--amber); box-shadow:0 0 8px 1px rgba(227,161,58,0.7);}
+}
+@media (prefers-reduced-motion: reduce){.sv-pulse{animation:none; opacity:0;}}
+.sv-node{position:relative; display:flex; align-items:baseline; gap:9px; padding:9px 0;}
+.sv-node::before{content:''; position:absolute; left:-18px; top:50%; transform:translateY(-50%); width:7px; height:7px; border-radius:50%; background:var(--bg-2); border:1px solid var(--steel);}
+.sv-io{font-size:0.62rem; color:var(--ink-faint); min-width:20px; text-align:center;}
+.sv-name{font-size:0.83rem; color:var(--ink); font-weight:500;}
+.sv-sub{font-size:0.66rem; color:var(--ink-faint); margin-left:auto;}
 
 /* SNAPSHOT — minimal horizontal metrics, no cards */
 .metrics-strip{padding:44px 0; border-bottom:1px solid var(--line);}
@@ -236,22 +239,6 @@ nav .wrap{width:100%; display:flex; align-items:center; justify-content:space-be
 .skill-pill{font-family:'JetBrains Mono', monospace; font-size:0.78rem; padding:8px 14px; border:1px solid var(--line); border-radius:20px; color:var(--ink); background:var(--surface); transition:all 0.2s;}
 .skill-pill:hover{border-color:var(--blue); color:var(--blue); transform:translateY(-2px);}
 
-/* skill spotlight (interactive) */
-.spotlight{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:28px 30px;}
-.spotlight-head{font-family:'JetBrains Mono', monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); margin-bottom:18px;}
-.spotlight-tabs{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:22px;}
-.spotlight-tab{
-  font-family:'JetBrains Mono', monospace; font-size:0.8rem; padding:9px 16px; border-radius:8px;
-  border:1px solid var(--line); background:none; color:var(--ink-dim); cursor:pointer; transition:all 0.2s;
-}
-.spotlight-tab:hover{border-color:var(--blue); color:var(--ink);}
-.spotlight-tab.active{background:var(--blue); border-color:var(--blue); color:#060810; font-weight:600;}
-.spotlight-panel{display:flex; flex-wrap:wrap; gap:10px;}
-.spotlight-item{
-  display:flex; align-items:center; gap:8px; font-size:0.88rem; color:var(--ink);
-  background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:9px 14px;
-}
-.spotlight-item::before{content:''; width:5px; height:5px; border-radius:50%; background:var(--amber); flex-shrink:0;}
 
 /* EXPERIENCE — editorial career presentation (distinct from Education) */
 .career-block{display:grid; grid-template-columns:150px 1fr; gap:0; border-top:1px solid var(--line);}
@@ -329,7 +316,9 @@ nav .wrap{width:100%; display:flex; align-items:center; justify-content:space-be
 .project-panel{
   background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
   padding:28px 32px; transition:border-color 0.22s;
+  display:grid; grid-template-columns:1fr 200px; gap:28px; align-items:start;
 }
+@media (max-width:760px){.project-panel{grid-template-columns:1fr;}}
 .project-panel:hover{border-color:var(--blue);}
 .project-panel h3{font-size:1.1rem; margin:10px 0 8px;}
 .project-panel p.pc-desc{color:var(--ink-dim); font-size:0.9rem; max-width:640px;}
@@ -337,6 +326,17 @@ nav .wrap{width:100%; display:flex; align-items:center; justify-content:space-be
 .project-panel-foot{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:18px;}
 .project-panel-foot .private-note{margin-top:0;}
 .project-panel-foot .case-study-btn{margin-top:0;}
+.panel-visual{
+  display:flex; flex-direction:column; gap:0; border-left:1px solid var(--line); padding-left:24px;
+}
+@media (max-width:760px){.panel-visual{border-left:none; border-top:1px solid var(--line); padding-left:0; padding-top:18px;}}
+.pv-node{
+  display:flex; align-items:center; gap:9px; font-family:'JetBrains Mono', monospace; font-size:0.74rem;
+  color:var(--ink-dim); padding:8px 0; position:relative;
+}
+.pv-node:not(:last-child)::after{content:''; position:absolute; left:3px; top:22px; width:1px; height:12px; background:var(--line);}
+.pv-dot{width:6px; height:6px; border-radius:50%; background:var(--blue); flex-shrink:0;}
+.pv-dot.amber{background:var(--amber);}
 .projects-compact{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
 @media (max-width:900px){.projects-compact{grid-template-columns:1fr;}}
 
@@ -490,23 +490,22 @@ footer .f-copy{margin-top:14px; font-family:'JetBrains Mono', monospace; font-si
     <div class="hero-visual">
       <div class="portrait-frame">
         <img src="avatar.jpg" alt="Gowshak Raja S" width="240" height="260" loading="eager">
-        <span class="portrait-badge"><span class="dot"></span>Open to opportunities</span>
+        <span class="portrait-badge"><span class="dot"></span>Enterprise Software Engineer</span>
       </div>
-      <div class="stack-pipeline reveal">
-        <div class="sp-label">Core Stack</div>
-        <div class="sp-row"><span class="sp-dot"></span>React Frontend</div>
-        <div class="sp-row"><span class="sp-dot"></span>REST API</div>
-        <div class="sp-row"><span class="sp-dot"></span>Spring Boot</div>
-        <div class="sp-row"><span class="sp-dot"></span>JPA / Hibernate</div>
-        <div class="sp-row"><span class="sp-dot"></span>MySQL</div>
+      <div class="system-viz reveal" aria-hidden="true">
+        <div class="sv-label mono">System Architecture</div>
+        <div class="sv-track">
+          <span class="sv-pulse"></span>
+          <div class="sv-node"><span class="sv-io mono">UI</span><span class="sv-name">Frontend</span><span class="sv-sub mono">React.js</span></div>
+          <div class="sv-node"><span class="sv-io mono">↕</span><span class="sv-name">REST API</span><span class="sv-sub mono">HTTP / JSON</span></div>
+          <div class="sv-node"><span class="sv-io mono">⚙</span><span class="sv-name">Spring Boot</span><span class="sv-sub mono">Service Layer</span></div>
+          <div class="sv-node"><span class="sv-io mono">⇄</span><span class="sv-name">JPA / Hibernate</span><span class="sv-sub mono">ORM</span></div>
+          <div class="sv-node"><span class="sv-io mono">DB</span><span class="sv-name">MySQL</span><span class="sv-sub mono">Persistence</span></div>
+        </div>
       </div>
     </div>
   </div>
 </header>
-
-<div class="ticker-strip" aria-hidden="true">
-  <div class="ticker-track" id="ticker-track"></div>
-</div>
 
 <div class="metrics-strip">
   <div class="wrap">
@@ -563,12 +562,6 @@ footer .f-copy{margin-top:14px; font-family:'JetBrains Mono', monospace; font-si
         <h4 class="expertise-title mono" id="expertise-title"></h4>
         <div class="expertise-cloud" id="expertise-cloud"></div>
       </div>
-    </div>
-
-    <div class="spotlight reveal">
-      <div class="spotlight-head">Skill Spotlight — click a technology to see what I actually do with it</div>
-      <div class="spotlight-tabs" id="spotlight-tabs"></div>
-      <div class="spotlight-panel" id="spotlight-panel"></div>
     </div>
   </div>
 </section>
@@ -645,23 +638,41 @@ footer .f-copy{margin-top:14px; font-family:'JetBrains Mono', monospace; font-si
 
     <div class="projects-wide">
       <div class="project-panel reveal">
-        <span class="category-label">Automation</span>
-        <h3>Enterprise Workflow Automation &amp; Document Management</h3>
-        <p class="pc-desc">Configurable workflow engines automating multi-level approval processes and digitizing business documentation, with role-based routing and real-time file monitoring.</p>
-        <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">REST API</span><span class="tag">File Monitoring</span></div>
-        <div class="project-panel-foot">
-          <span class="private-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Private / Client Project</span>
-          <button type="button" class="case-study-btn" data-project="workflow">View Case Study →</button>
+        <div class="panel-main">
+          <span class="category-label">Automation</span>
+          <h3>Enterprise Workflow Automation &amp; Document Management</h3>
+          <p class="pc-desc">Configurable workflow engines automating multi-level approval processes and digitizing business documentation, with role-based routing and real-time file monitoring.</p>
+          <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">REST API</span><span class="tag">File Monitoring</span></div>
+          <div class="project-panel-foot">
+            <span class="private-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Private enterprise project · Source not publicly available</span>
+            <button type="button" class="case-study-btn" data-project="workflow">View Case Study →</button>
+          </div>
+        </div>
+        <div class="panel-visual" aria-hidden="true">
+          <span class="pv-node"><span class="pv-dot"></span>Input</span>
+          <span class="pv-node"><span class="pv-dot"></span>Validation</span>
+          <span class="pv-node"><span class="pv-dot"></span>Approval</span>
+          <span class="pv-node"><span class="pv-dot"></span>Document</span>
+          <span class="pv-node"><span class="pv-dot amber"></span>Completion</span>
         </div>
       </div>
       <div class="project-panel reveal">
-        <span class="category-label">Predictive Maintenance</span>
-        <h3>Predictive Maintenance &amp; Equipment Monitoring</h3>
-        <p class="pc-desc">Equipment health logging and threshold-based predictive service reminders using scheduled job triggers, giving operators advance warning before predicted maintenance windows.</p>
-        <div class="tags"><span class="tag">Spring Boot</span><span class="tag">Scheduled Jobs</span><span class="tag">Alert Engine</span></div>
-        <div class="project-panel-foot">
-          <span class="private-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Private / Client Project</span>
-          <button type="button" class="case-study-btn" data-project="predictive">View Case Study →</button>
+        <div class="panel-main">
+          <span class="category-label">Predictive Maintenance</span>
+          <h3>Predictive Maintenance &amp; Equipment Monitoring</h3>
+          <p class="pc-desc">Equipment health logging and threshold-based predictive service reminders using scheduled job triggers, giving operators advance warning before predicted maintenance windows.</p>
+          <div class="tags"><span class="tag">Spring Boot</span><span class="tag">Scheduled Jobs</span><span class="tag">Alert Engine</span></div>
+          <div class="project-panel-foot">
+            <span class="private-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Private enterprise project · Source not publicly available</span>
+            <button type="button" class="case-study-btn" data-project="predictive">View Case Study →</button>
+          </div>
+        </div>
+        <div class="panel-visual" aria-hidden="true">
+          <span class="pv-node"><span class="pv-dot"></span>Equipment</span>
+          <span class="pv-node"><span class="pv-dot"></span>Monitoring</span>
+          <span class="pv-node"><span class="pv-dot"></span>Threshold</span>
+          <span class="pv-node"><span class="pv-dot"></span>Alert</span>
+          <span class="pv-node"><span class="pv-dot amber"></span>Maintenance</span>
         </div>
       </div>
     </div>
@@ -742,7 +753,7 @@ footer .f-copy{margin-top:14px; font-family:'JetBrains Mono', monospace; font-si
 <section id="contact">
   <div class="wrap">
     <div class="contact-panel reveal">
-      <span class="eyebrow" style="justify-content:center;">Available for opportunities</span>
+      <span class="eyebrow" style="justify-content:center;">Building enterprise systems</span>
       <h2>Let's Build Something Useful.</h2>
       <p>Open to new opportunities and collaborations in full stack development. Reach out through any of these:</p>
       <div class="contact-links">
@@ -786,18 +797,6 @@ footer .f-copy{margin-top:14px; font-family:'JetBrains Mono', monospace; font-si
 </div>
 
 <script>
-/* ticker content */
-const techList = ['Java','Spring Boot','Hibernate / JPA','REST API','React.js','MySQL','PostgreSQL','Microservices','Docker','Kubernetes','Git','Maven','Jenkins','Postman','JBoss'];
-const tickerTrack = document.getElementById('ticker-track');
-function buildTicker(){
-  let html = '';
-  for(let rep = 0; rep < 2; rep++){
-    techList.forEach(t => { html += `<span class="ticker-item">${t}<span class="sep">/</span></span>`; });
-  }
-  tickerTrack.innerHTML = html;
-}
-buildTicker();
-
 /* mobile nav */
 const navToggle = document.getElementById('nav-toggle');
 const navLinks = document.getElementById('nav-links');
@@ -883,31 +882,6 @@ expertiseCategories.querySelectorAll('.expertise-cat').forEach(btn => {
   btn.addEventListener('click', () => renderExpertise(btn.dataset.key));
 });
 renderExpertise(expertiseKeys[0]);
-
-/* skill spotlight */
-const spotlightData = {
-  'Spring Boot': ['REST APIs', 'Business Logic', 'Validation', 'Service Architecture', 'Integration'],
-  'Hibernate / JPA': ['Entity Mapping', 'Relationships', 'Queries', 'Transactions', 'Database Integration'],
-  'React.js': ['Components', 'Hooks', 'Routing', 'API Integration', 'Responsive UI'],
-  'Java': ['OOP Design', 'Collections', 'Multithreading Basics', 'Exception Handling', 'Core Libraries'],
-  'REST APIs': ['Resource Design', 'CRUD Endpoints', 'Status Codes', 'Postman Testing', 'Frontend Integration'],
-  'MySQL': ['Schema Design', 'Joins &amp; Indexing', 'Stored Procedures', 'Query Optimization', 'Data Integrity']
-};
-const spotlightTabs = document.getElementById('spotlight-tabs');
-const spotlightPanel = document.getElementById('spotlight-panel');
-const spotlightKeys = Object.keys(spotlightData);
-
-function renderSpotlight(key){
-  spotlightPanel.innerHTML = spotlightData[key].map(item => `<div class="spotlight-item">${item}</div>`).join('');
-  spotlightTabs.querySelectorAll('.spotlight-tab').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.key === key);
-  });
-}
-spotlightTabs.innerHTML = spotlightKeys.map(k => `<button type="button" class="spotlight-tab" data-key="${k}">${k}</button>`).join('');
-spotlightTabs.querySelectorAll('.spotlight-tab').forEach(btn => {
-  btn.addEventListener('click', () => renderSpotlight(btn.dataset.key));
-});
-renderSpotlight(spotlightKeys[0]);
 
 /* case study modal */
 const caseStudies = {
